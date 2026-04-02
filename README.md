@@ -12,9 +12,10 @@ Each student builds their own project:
 ----
 
 ## Task 1 (graded by TA after the lab).
-Pen and paper quiz.
-- closed book, no devices allowed.
-- you get random 3 questions from the question bank.
+Pen and paper quiz:
+- 20 mins;
+- closed book, no devices;
+- you get random 3 questions from the question bank;
 - answer at least 2.
 
 ## Task 2 (approved by TA during the lab).
@@ -29,8 +30,8 @@ The project idea must be:
 - easy to explain.
 
 Define and show to your TA:
-- End users of the product
-- Which problem your product solves for the end users
+- End-user of the product
+- Which problem your product solves for the end users / what is its core feature?
 - The product idea in one short sentence
 
 ### Implementation plan
@@ -38,17 +39,18 @@ Define and show to your TA:
 When the idea is approved, produce a plan for two product versions.
 
 Version 1 does one core thing well:
-- Pick the feature most valuable to the end-user and relatively easy to implement;
+- Pick one feature most valuable to the end-user and relatively easy to implement;
 - It is a functioning product, not a prototype;
 - Needs to be shown to the TA upon completion for feedback.
 
 Version 2 builds upon Version 1:
+- improves the initial feature, or adds another one on top;
 - address TA feedback from the lab;
 - deploy and make it available to use.
 
 > 🟪 **Notes**
 > 1. The product must have these components each fulfilling a useful function: LLM-powered agent (preferably `nanobot`), Frontend, Backend, Database.
-> 2. You are advised to use the setup from Lab 8 as the base to iterate from.
+> 2. You are free to use the setup from Lab 8 as the base to iterate from.
 > 3. `Telegram` bots deployed on a university VM can fail to receive messages when hosted there.
 
 ## Task 3 (approved by TA during the lab).
@@ -56,9 +58,9 @@ Version 2 builds upon Version 1:
 Implement Version 1 outlined in the plan:
 - Build one core feature;
 - Follow best practices and git workflow;
-- Test it and fix bugs
-- Have the TA try it as a user
-- Take note of the feedback
+- Test it yourself and fix bugs;
+- Have the TA try it as a user;
+- Take note of the TA feedback;
 - Get TA's approval for the task to be marked as DONE.
 
 
