@@ -8,6 +8,20 @@
 React SPA фронтенд для Room Booking Service — сервиса бронирования переговорок.
 Минималистичный дизайн с glassmorphism-акцентами.
 
+### Version 1 (core — показ TA)
+- LoginPage (dummyLogin)
+- RoomsPage (список переговорок)
+- BookingPage (просмотр слотов + бронирование)
+- MyBookingsPage (свои брони + отмена)
+- Базовый glassmorphism UI
+
+### Version 2 (polish + deploy)
+- AdminPage (создание переговорок, расписание, все брони)
+- Улучшенные анимации, skeleton loaders, empty states
+- Docker + Docker Compose integration
+- Production deployment на university VM
+- Screenshots для README
+
 **Стек:**
 - Vite + React 18 + TypeScript
 - React Router v6 (роутинг)
@@ -277,7 +291,54 @@ Tailwind: `bg-white/70 backdrop-blur-lg border border-white/20 shadow-lg`
 
 ## Deployment
 
+### Docker (Task 4 requirement)
+
+Фронтенд докеризуется через multi-stage build:
+
+```dockerfile
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+```
+
+`nginx.conf` — SPA routing (все запросы → `index.html`), proxy `/api` на бэкенд `http://backend:8080`.
+
+### Docker Compose integration
+
+Фронтенд добавляется в `docker-compose.yaml` рядом с бэкендом:
+
+```yaml
+frontend:
+  build: ./frontend
+  ports:
+    - "3000:80"
+  depends_on:
+    - backend
+```
+
+### Production build
+
 - `npm run build` → `dist/`
-- Статические файлы, можно хостить где угодно
-- Для демо: Vercel, Netlify, или nginx на university VM
-- API URL настраивается через `VITE_API_URL` env var
+- API URL настраивается через `VITE_API_URL` env var (build-time)
+- Для university VM: nginx container, Ubuntu 24.04
+
+### README requirements (Task 5)
+
+Финальный README репозитория должен содержать:
+- Product name: "Room Booking Service"
+- One-line description
+- Screenshots фронтенда (login, rooms, booking grid)
+- End users: сотрудники компании, администраторы офисов
+- Problem: нет единого сервиса бронирования переговорок
+- Solution: web-приложение с визуальным календарём слотов
+- Features: implemented (backend + frontend) и planned
+- Usage: как запустить через `docker-compose up`
+- Deployment: Ubuntu 24.04, Docker Compose, step-by-step
