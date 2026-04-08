@@ -7,7 +7,6 @@
 *.swo
 .env
 .env.local
-docs/
 plans/
 .DS_Store
 .opencode/
