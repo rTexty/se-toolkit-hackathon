@@ -98,9 +98,9 @@ cd backend && make seed
 ```
 
 The application will be available at:
-- **Frontend:** http://localhost:3000
-- **API:** http://localhost:8080
-- **Swagger Docs:** http://localhost:8080/docs/
+- **Frontend:** http://10.93.26.87:3000
+- **API:** http://10.93.26.87:8080
+- **Swagger Docs:** http://10.93.26.87:8080/docs/
 
 ### Services
 | Service | Port | Description |
