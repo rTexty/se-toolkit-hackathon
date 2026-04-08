@@ -28,6 +28,18 @@ export interface Slot {
   end: string
 }
 
+export interface SlotWithBooking {
+  id: string
+  roomId: string
+  start: string
+  end: string
+  status: 'free' | 'booked'
+  booking?: {
+    userId: string
+    userEmail: string
+  }
+}
+
 export interface Booking {
   id: string
   slotId: string
@@ -35,6 +47,12 @@ export interface Booking {
   status: 'active' | 'cancelled'
   conferenceLink?: string | null
   createdAt?: string
+  // Enriched fields from backend
+  userEmail?: string
+  slotStart?: string
+  slotEnd?: string
+  roomId?: string
+  roomName?: string
 }
 
 export interface Pagination {
