@@ -8,6 +8,30 @@ interface LoginResponse {
   token: string
 }
 
+interface RegisterResponse {
+  token: string
+  user: User
+}
+
+export function useRegister() {
+  const navigate = useNavigate()
+  const setAuth = useAuthStore((state) => state.setAuth)
+
+  return useMutation({
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      const { data } = await apiClient.post<RegisterResponse>('/register', {
+        ...credentials,
+        role: 'user',
+      })
+      return data
+    },
+    onSuccess: (data) => {
+      setAuth(data.user, data.token)
+      navigate('/rooms')
+    },
+  })
+}
+
 export function useDummyLogin() {
   const navigate = useNavigate()
   const setAuth = useAuthStore((state) => state.setAuth)
