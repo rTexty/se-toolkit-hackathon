@@ -4,17 +4,25 @@ A meeting room booking system where administrators configure room schedules, the
 
 ## Demo
 
-### Room Timeline
-<!-- Add screenshot: rooms page showing timeline with free and booked slots -->
-The main page shows all meeting rooms with a visual timeline. Green slots are free, red slots show who booked them.
+### Login Page
+![Login Page](screens/LoginPage.png)
+Email/password login with quick dummy access for testing.
 
-### Booking Flow
-<!-- Add screenshot: drag-select on timeline → confirmation dialog -->
-Click and drag on the timeline to select a time range, then confirm your booking.
+### Room Timeline — Book & See Who Booked
+![Room Booking](screens/UserRoomsBooking.png)
+Drag on the timeline to select a time range. Booked slots show who reserved them.
 
-### Admin Panel
-<!-- Add screenshot: admin page with room creation and bookings table -->
-Admins can create rooms, set schedules, and view all bookings with user details.
+### My Bookings
+![My Bookings](screens/UserMyBookings.png)
+View your active and cancelled bookings with room names and time slots.
+
+### Admin — Room Management
+![Admin Rooms](screens/AdminDashboardRooms.png)
+Create and manage meeting rooms with capacity.
+
+### Admin — Schedule & Bookings
+![Admin Schedule](screens/AdminDashboardSchedule.png)
+Set room schedules and view all bookings with user emails and slot times.
 
 ## Product Context
 
