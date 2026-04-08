@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Room Booking Service — Swagger UI</title>
+<link rel="stylesheet" href="/docs/swagger-ui.css">
+<style>html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}body{margin:0}</style>
+</head>
+<body>
+<div id="swagger-ui"></div>
+<script src="/docs/swagger-ui-bundle.js"></script>
+<script src="/docs/swagger-ui-standalone-preset.js"></script>
+<script>
+window.onload = function() {
+  window.ui = SwaggerUIBundle({
+    url: "/docs/swagger.json",
+    dom_id: '#swagger-ui',
+    deepLinking: true,
+    presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+    layout: "StandaloneLayout"
+  });
+};
+</script>
+</body>
+</html>

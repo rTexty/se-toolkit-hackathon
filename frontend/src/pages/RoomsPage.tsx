@@ -62,7 +62,7 @@ function RoomTimeline({
   room: Room
   slots: SlotWithBooking[]
   loading: boolean
-  onBook: (room: Room, startSlot: SlotWithBooking, endSlot: SlotWithBooking) => void
+  onBook: (room: Room, startSlot: SlotWithBooking, endSlot: SlotWithBooking, allSlots: SlotWithBooking[]) => void
   isAdmin: boolean
 }) {
   const [selection, setSelection] = useState<{ start: number; end: number } | null>(null)
@@ -94,7 +94,7 @@ function RoomTimeline({
       const startSlot = slots.find((s) => slotStartMinutes(s) === selection!.start && s.status === 'free')
       const endSlot = slots.find((s) => slotStartMinutes(s) === selection!.end - 30 && s.status === 'free')
       if (startSlot && endSlot) {
-        onBook(room, startSlot, endSlot)
+        onBook(room, startSlot, endSlot, slots)
       }
     }
     setSelection(null)
@@ -130,7 +130,7 @@ function RoomTimeline({
       {/* Timeline */}
       <div
         ref={containerRef}
-        className="relative p-4 select-none"
+        className="relative p-4 select-none max-h-[500px] overflow-y-auto"
         onMouseUp={handleMouseUp}
         onMouseLeave={() => { if (dragging) handleMouseUp() }}
       >
@@ -143,15 +143,15 @@ function RoomTimeline({
         ) : slots.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-8">No slots for this date</p>
         ) : (
-          <div className="relative" style={{ height: `${HOURS.length * 48}px` }}>
+          <div className="relative" style={{ height: `${HOURS.length * 44}px` }}>
             {/* Hour lines */}
             {HOURS.map((hour) => (
               <div
                 key={hour}
-                className="absolute w-full border-t border-white/10 flex items-center"
+                className="absolute w-full border-t border-white/10"
                 style={{ top: `${((hour * 60 - DAY_START) / DAY_RANGE) * 100}%` }}
               >
-                <span className="text-[10px] text-muted-foreground -mt-3 ml-1 bg-white/60 px-1 rounded">
+                <span className="absolute -top-2.5 left-0 text-[11px] text-muted-foreground bg-white/80 px-1.5 rounded font-mono">
                   {String(hour).padStart(2, '0')}:00
                 </span>
               </div>
@@ -167,7 +167,7 @@ function RoomTimeline({
               return (
                 <div
                   key={slot.id}
-                  className={`absolute left-12 right-2 rounded-md text-xs font-medium flex items-center justify-between px-2 transition-all duration-100 ${
+                  className={`absolute left-14 right-2 rounded-md text-xs font-medium flex items-center justify-between px-2 transition-all duration-100 ${
                     isSelected
                       ? 'bg-indigo-500/80 text-white ring-2 ring-indigo-400 z-10'
                       : isBooked
@@ -221,42 +221,56 @@ export default function RoomsPage() {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [startSlot, setStartSlot] = useState<SlotWithBooking | null>(null)
   const [endSlot, setEndSlot] = useState<SlotWithBooking | null>(null)
+  const [slotsInRange, setSlotsInRange] = useState<SlotWithBooking[]>([])
   const [createLink, setCreateLink] = useState(false)
   const [dialogError, setDialogError] = useState<string | null>(null)
 
   const dateStr = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''
   const { mutateAsync: createBooking, isPending: bookingPending } = useCreateBooking()
 
-  const handleBook = (room: Room, s: SlotWithBooking, e: SlotWithBooking) => {
+  const handleBook = (room: Room, s: SlotWithBooking, e: SlotWithBooking, allSlots: SlotWithBooking[]) => {
     if (isAdmin) return
     setSelectedRoom(room)
     setStartSlot(s)
     setEndSlot(e)
+    // Collect all free slots in the selected range
+    const startMin = slotStartMinutes(s)
+    const endMin = slotEndMinutes(e)
+    const inRange = allSlots.filter(
+      (sl) => sl.status === 'free' && slotStartMinutes(sl) >= startMin && slotStartMinutes(sl) < endMin
+    )
+    setSlotsInRange(inRange)
     setDialogError(null)
     setDialogOpen(true)
   }
 
   const handleConfirm = async () => {
-    if (!startSlot) return
+    if (!startSlot || slotsInRange.length === 0) return
     setDialogError(null)
 
     try {
-      const booking = await createBooking({ slotId: startSlot.id, createConferenceLink: createLink })
+      // Book each slot in the range
+      let lastBooking = null
+      for (const slot of slotsInRange) {
+        lastBooking = await createBooking({ slotId: slot.id, createConferenceLink: createLink && slot.id === startSlot.id })
+      }
+
       setDialogOpen(false)
       setCreateLink(false)
       setStartSlot(null)
       setEndSlot(null)
+      setSlotsInRange([])
       setSelectedRoom(null)
 
-      if (booking.conferenceLink) {
-        toast.success('Booking created!', {
-          description: `Conference link: ${booking.conferenceLink}`,
+      if (lastBooking?.conferenceLink) {
+        toast.success(`${slotsInRange.length} slot(s) booked!`, {
+          description: `Conference link: ${lastBooking.conferenceLink}`,
         })
       } else {
-        toast.success('Booking created!')
+        toast.success(`${slotsInRange.length} slot(s) booked!`)
       }
     } catch {
-      setDialogError('Failed to create booking. The slot may have been taken.')
+      setDialogError('Failed to create booking. Some slots may have been taken.')
     }
   }
 
@@ -350,6 +364,7 @@ export default function RoomsPage() {
           setCreateLink(false)
           setStartSlot(null)
           setEndSlot(null)
+          setSlotsInRange([])
           setSelectedRoom(null)
           setDialogError(null)
         }
@@ -428,7 +443,7 @@ export default function RoomsPage() {
 function RoomTimelineWrapper({ room, dateStr, onBook, isAdmin }: {
   room: Room
   dateStr: string
-  onBook: (room: Room, start: SlotWithBooking, end: SlotWithBooking) => void
+  onBook: (room: Room, start: SlotWithBooking, end: SlotWithBooking, allSlots: SlotWithBooking[]) => void
   isAdmin: boolean
 }) {
   const { data: slots = [], isLoading } = useAllSlots(room.id, dateStr)

@@ -32,6 +32,33 @@ export function useRegister() {
   })
 }
 
+export function useLogin() {
+  const navigate = useNavigate()
+  const setAuth = useAuthStore((state) => state.setAuth)
+
+  return useMutation({
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      const { data } = await apiClient.post<{ token: string }>('/login', credentials)
+      // Decode JWT to get user info
+      const payload = JSON.parse(atob(data.token.split('.')[1]))
+      const user: User = {
+        id: payload.user_id,
+        email: credentials.email,
+        role: payload.role,
+      }
+      return { token: data.token, user }
+    },
+    onSuccess: (data) => {
+      setAuth(data.user, data.token)
+      if (data.user.role === 'admin') {
+        navigate('/admin')
+      } else {
+        navigate('/rooms')
+      }
+    },
+  })
+}
+
 export function useDummyLogin() {
   const navigate = useNavigate()
   const setAuth = useAuthStore((state) => state.setAuth)

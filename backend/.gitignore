@@ -1,0 +1,13 @@
+/bin/
+*.exe
+*.test
+.idea/
+.vscode/
+*.swp
+*.swo
+.env
+.env.local
+docs/
+plans/
+.DS_Store
+.opencode/

@@ -1,170 +1,106 @@
-# Lab 9 - Quiz and Hackathon
+# Room Booking Service
 
-The lab opens with a quiz and then kicks off the hackathon.
+A meeting room booking system where administrators configure room schedules, the system generates time slots automatically, and employees can view, book, or cancel reservations.
 
-To get the full point for the lab, you need to:
+## Demo
 
-- Pass Tasks 1, 2, 3 during the lab AND
-- Finish Tasks 4 and 5 by the usual deadline of Thursday 23:59.
+### Room Timeline
+<!-- Add screenshot: rooms page showing timeline with free and booked slots -->
+The main page shows all meeting rooms with a visual timeline. Green slots are free, red slots show who booked them.
 
-Each student builds their own project:
+### Booking Flow
+<!-- Add screenshot: drag-select on timeline → confirmation dialog -->
+Click and drag on the timeline to select a time range, then confirm your booking.
 
-- Go from an idea to a deployed product.
-- Use agents and LLMs throughout.
+### Admin Panel
+<!-- Add screenshot: admin page with room creation and bookings table -->
+Admins can create rooms, set schedules, and view all bookings with user details.
 
-----
+## Product Context
 
-## Task 1 (graded by TA after the lab)
+### End Users
+- **Company employees** who need to reserve meeting rooms for meetings and calls
+- **Office administrators** who manage rooms and monitor bookings
 
-Pen and paper quiz:
+### Problem
+Manual room booking leads to double bookings, scheduling conflicts, and wasted time coordinating who uses which room when.
 
-- 20 mins;
-- closed book, no devices;
-- you get 3 random questions from the question bank;
-- answer at least 2.
+### Solution
+An automated system that generates available time slots based on room schedules, enforces booking rules in real-time, and shows at a glance which rooms are free and who has booked the occupied ones.
 
-## Task 2 (approved by TA during the lab)
+## Features
 
-Ideate and plan your project.
+### Implemented
+- Room management (create, list rooms)
+- Schedule management (set availability by day of week and time range)
+- Automatic 30-minute slot generation based on schedules
+- Visual timeline showing free and booked slots with user names
+- Slot booking with drag-to-select interface
+- Booking cancellation
+- User registration and login with JWT authentication
+- Role-based access (admin / user)
+- Admin panel: room creation, schedule setup, all bookings overview
+- Conference link generation (optional, auto-generates meeting URL)
+- Responsive glassmorphism UI
+- Error handling and loading states
+- Docker Compose deployment
 
-### Project idea
+### Not Yet Implemented
+- Email notifications for booking confirmations
+- Recurring bookings
+- Room equipment/filtering
+- Booking time limits per user
+- Export bookings to calendar (iCal)
 
-The project idea must be:
+## Usage
 
-- something simple to build;
-- clearly useful;
-- easy to explain.
+### As an Employee (User)
+1. Open the application and log in with your credentials
+2. Select a date from the calendar sidebar
+3. View available time slots on the room timeline (green = free, red = booked)
+4. Click and drag on free slots to select your desired time range
+5. Confirm the booking in the dialog
+6. View and manage your bookings in "My Bookings"
 
-Define and show to your TA:
+### As an Administrator
+1. Log in with admin credentials
+2. Go to the Admin panel
+3. Create meeting rooms with name and capacity
+4. Set room schedules (which days and hours the room is available)
+5. View all bookings across all rooms and users
 
-- End-user of the product
-- What problem your product solves for the end-user?
-- The product idea in one short sentence.
-- What is the product's core feature?
+## Deployment
 
-### Implementation plan
+### Requirements
+- **OS:** Ubuntu 24.04 (or any Linux with Docker support)
+- **Installed:** Docker, Docker Compose
 
-When the idea is approved, produce a plan for two product versions.
+### Step-by-step
 
-Version 1 does one core thing well:
+```bash
+# 1. Clone the repository
+git clone https://github.com/rtexty/se-toolkit-hackathon.git
+cd se-toolkit-hackathon
 
-- Pick the one feature most valuable to the end-user and relatively easy to implement;
-- It is a functioning product, not a prototype;
-- Must be shown to the TA upon completion for feedback.
+# 2. Start all services
+docker compose up --build -d
 
-Version 2 builds upon Version 1:
+# 3. (Optional) Seed test data
+cd backend && make seed
+```
 
-- Improves the initial feature or adds another one on top;
-- Address TA feedback from the lab;
-- Deploy and make it available for use.
+The application will be available at:
+- **Frontend:** http://localhost:3000
+- **API:** http://localhost:8080
+- **Swagger Docs:** http://localhost:8080/docs/
 
-The product must have the following components, each fulfilling a useful function:
+### Services
+| Service | Port | Description |
+|---------|------|-------------|
+| `db` | 5432 | PostgreSQL 16 |
+| `app` | 8080 | Go backend API |
+| `frontend` | 3000 | React SPA (nginx) |
 
-- backend;
-- database;
-- end-user-facing client: web app, mobile app, or LLM-powered agent, e.g. `nanobot`.
+## License
 
-Note:
-
-- You can use the setup from Lab 8 or start from scratch.
-- `Telegram` bots are blocked on university VMs.
-
-## Task 3 (approved by TA during the lab)
-
-Implement Version 1 outlined in the plan:
-
-- Build one core feature;
-- Follow best practices and git workflow;
-- Test it yourself and fix bugs;
-- Have the TA try it as a user;
-- Take note of the TA feedback;
-- Get TA's approval for the task to be marked as DONE.
-
-## Task 4
-
-Implement and deploy Version 2 outlined in the plan:
-
-- Build and polish functionality;
-- Take TA feedback into account;
-- Push all code to the GitHub repo (see the detailed instructions below);
-- Follow best practices and git workflow;
-- Document your solution;
-- Dockerize all services;
-- Deploy it to be accessible to use.
-
-Version 2 can be completed during the lab or after it, before the usual deadline.
-
-## Task 5 (demo and PDF submitted through Moodle)
-
-Submit a presentation with five slides:
-
-1. Title:
-
-   - Product title
-   - Your name
-   - Your university email
-   - Your group
-
-2. Context:
-
-   - End-user of the product
-   - What problem your product solves
-   - The product idea in one short sentence
-
-3. Implementation:
-
-   - How you built the product
-   - What went into Version 1 and Version 2
-   - What TA feedback points you addressed
-
-4. Demo:
-
-   - Pre-recorded video demonstration of Version 2 with voice-over (no longer than 2 minutes).
-   - _Note:_ **This is the most important part of the presentation**.
-
-5. Links:
-
-   - Link and QR code for each of these:
-     - The GitHub repo with the product code
-     - Deployed product (latest version)
-
-----
-
-## Publishing the product code on GitHub
-
-- Publish the product code in a repository on `GitHub`.
-
-  The repository must be called `se-toolkit-hackathon`.
-
-- Add the MIT license file to make your product open-source.
-
-- Add `README.md` in the product repository.
-
-  `README.md` structure:
-
-  - Product name (as title)
-
-  - One-line description
-
-  - Demo:
-    - A couple of relevant screenshots of the product
-
-  - Product context:
-
-    - End users
-    - Problem that your product solves for end users
-    - Your solution
-
-  - Features:
-
-    - Implemented and not yet implemented features
-
-  - Usage:
-
-    - Explain how to use your product
-
-  - Deployment:
-
-    - Which OS the VM should run on (you may assume `Ubuntu 24.04` like on your university VMs)
-    - What should be installed on the VM
-    - Step-by-step deployment instructions
+[MIT](LICENSE)

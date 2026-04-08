@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,26 +35,108 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Restore table display for react-day-picker (Tailwind preflight breaks it) */
+  table {
+    display: table;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tbody {
+    display: table-row-group;
+  }
+  tr {
+    display: table-row;
+  }
+  th, td {
+    display: table-cell;
   }
 }
 
 @layer components {
   .glass {
-    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-lg;
+    @apply bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl;
   }
+
   .glass-nav {
-    @apply bg-white/50 backdrop-blur-md border-b border-white/20;
+    @apply bg-white/70 backdrop-blur-2xl border-b border-white/40 shadow-sm;
   }
+
   .glass-card {
-    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-lg rounded-xl;
+    @apply bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl rounded-2xl;
   }
+
   .glass-card-hover {
-    @apply glass-card transition-all duration-200 hover:scale-[1.02] hover:shadow-xl;
+    @apply glass-card transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:border-white/50;
   }
+
+  .glass-input {
+    @apply bg-white/40 backdrop-blur-sm border border-white/30 rounded-xl focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200;
+  }
+
+  .glass-button {
+    @apply bg-white/60 backdrop-blur-sm border border-white/30 rounded-xl px-4 py-2 font-medium transition-all duration-200 hover:bg-white/80 hover:shadow-lg active:scale-[0.98];
+  }
+
   .slot-free {
-    @apply bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 rounded-lg;
+    @apply bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 rounded-xl;
   }
+
   .slot-booked {
-    @apply bg-rose-500/10 backdrop-blur-sm border border-rose-500/20 rounded-lg;
+    @apply bg-rose-500/10 backdrop-blur-sm border border-rose-500/20 rounded-xl;
+  }
+
+  /* Override Tailwind preflight for react-day-picker table elements */
+  .rdp-table {
+    display: table !important;
+    border-collapse: collapse !important;
+  }
+
+  .rdp-head_row {
+    display: table-row !important;
+  }
+
+  .rdp-head_cell {
+    display: table-cell !important;
+  }
+
+  .rdp-row {
+    display: table-row !important;
+  }
+
+  .rdp-cell {
+    display: table-cell !important;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 20s infinite ease-in-out;
+  }
+
+  .animate-float-delay {
+    animation: float 20s infinite ease-in-out 5s;
+  }
+
+  .animate-float-slow {
+    animation: float 20s infinite ease-in-out 10s;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(50px, -50px) scale(1.1);
+  }
+  50% {
+    transform: translate(-30px, 30px) scale(0.95);
+  }
+  75% {
+    transform: translate(40px, 20px) scale(1.05);
   }
 }
